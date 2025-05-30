@@ -9,14 +9,21 @@ import com.qjulio.t2_julio.data.repository.MascotaRepository
 
 class MascotaAddEditViewModelFactory(
     private val mascotaRepository: MascotaRepository,
-    private val authRepository: AuthRepository
-) : ViewModelProvider.NewInstanceFactory() {
+    private val authRepository: AuthRepository,
+    private val firestore: FirebaseFirestore,
+    private val firebaseAuth: FirebaseAuth
+) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(MascotaAddEditViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return MascotaAddEditViewModel(mascotaRepository, authRepository) as T
+        return if (modelClass.isAssignableFrom(MascotaAddEditViewModel::class.java)) {
+            MascotaAddEditViewModel(
+                mascotaRepository,
+                authRepository,
+                firestore,
+                firebaseAuth
+            ) as T
+        } else {
+            throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
         }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

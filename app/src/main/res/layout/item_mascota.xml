@@ -9,11 +9,12 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="382dp"
+        android:background="@drawable/fondomascot"
         android:orientation="vertical"
         android:padding="12dp">
 
-        <!-- Imagen arriba -->
+
         <ImageView
             android:id="@+id/imageMascota"
             android:layout_width="match_parent"
@@ -21,34 +22,33 @@
             android:scaleType="centerCrop"
             android:src="@drawable/placeholder_image" />
 
-        <!-- Textos: nombre, descripción, precio -->
         <TextView
             android:id="@+id/tvNombre"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:text="Nombre de la mascota"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:layout_marginTop="8dp" />
+            android:textSize="19sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/tvDescripcion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:text="Descripción"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp" />
+            android:textSize="19sp" />
 
         <TextView
             android:id="@+id/tvPrecio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="S/. 0.00"
-            android:textColor="@android:color/holo_green_dark"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="4dp"
+            android:text="Precio: "
+            android:textColor="@color/brown"
+            android:textSize="19sp"
+            android:textStyle="bold" />
 
-        <!-- Botones en esquinas -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,17 +58,17 @@
                 android:id="@+id/btnEditar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Editar"
+                android:layout_alignParentStart="true"
                 android:backgroundTint="@color/brown"
-                android:layout_alignParentStart="true" />
+                android:text="Editar" />
 
             <Button
                 android:id="@+id/btnEliminar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Eliminar"
+                android:layout_alignParentEnd="true"
                 android:backgroundTint="@color/brown"
-                android:layout_alignParentEnd="true" />
+                android:text="Eliminar" />
         </RelativeLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

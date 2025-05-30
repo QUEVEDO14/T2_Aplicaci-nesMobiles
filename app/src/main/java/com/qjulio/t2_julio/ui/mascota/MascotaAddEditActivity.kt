@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -23,11 +24,15 @@ class MascotaAddEditActivity : AppCompatActivity() {
     private val firebaseAuth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance()
     private var imageUri: Uri? = null
+    private var mascotaExistente: Mascota? = null
+
 
     private val mascotaAddEditViewModel: MascotaAddEditViewModel by viewModels {
         MascotaAddEditViewModelFactory(
             mascotaRepository = MascotaRepository(firestore, firebaseAuth),
-            authRepository = AuthRepository(firebaseAuth, firestore)
+            authRepository = AuthRepository(firebaseAuth, firestore),
+            firestore = firestore,
+            firebaseAuth = firebaseAuth
         )
     }
 
@@ -55,8 +60,28 @@ class MascotaAddEditActivity : AppCompatActivity() {
         descriptionEditText = findViewById(R.id.etDescripcion)
         priceEditText = findViewById(R.id.etPrecio)
         imageUrlEditText = findViewById(R.id.etImagenUrl)
+
+
         val seleccionarImagenBtn = findViewById<Button>(R.id.btnSeleccionarImagen)
         val saveButton = findViewById<Button>(R.id.btnGuardar)
+
+        val mascotaId = intent.getStringExtra("mascota_id")
+        if (mascotaId != null) {
+            mascotaAddEditViewModel.cargarMascotaPorId(mascotaId)
+        }
+
+        mascotaAddEditViewModel.mascota.observe(this) { mascota ->
+            mascota?.let {
+                mascotaExistente = it
+                nameEditText.setText(it.name)
+                descriptionEditText.setText(it.description)
+                priceEditText.setText(it.price.toString())
+                imageUrlEditText.setText(it.imageUrl)
+                Glide.with(this).load(it.imageUrl).into(imageView)
+
+            }
+        }
+
 
         seleccionarImagenBtn.setOnClickListener {
             pickImageLauncher.launch("image/*")
@@ -66,27 +91,21 @@ class MascotaAddEditActivity : AppCompatActivity() {
             val name = nameEditText.text.toString().trim()
             val description = descriptionEditText.text.toString().trim()
             val price = priceEditText.text.toString().toIntOrNull() ?: 0
-            val imageUrl = imageUrlEditText.text.toString().trim()
+            val imageUrlFromInput = imageUrlEditText.text.toString().trim()
 
             if (name.isEmpty() || description.isEmpty()) {
                 showToast("Por favor completa todos los campos obligatorios")
                 return@setOnClickListener
             }
 
-            when {
-                imageUri != null -> uploadImageToFirebase(imageUri!!, name, description, price)
-                imageUrl.isNotEmpty() -> savePetData(name, description, price, imageUrl)
-                else -> showToast("Selecciona una imagen o ingresa una URL")
-            }
-        }
-
-        // Observa el resultado del guardado para mostrar mensaje y cerrar la activity si fue exitoso
-        mascotaAddEditViewModel.guardarResultado.observe(this) { result ->
-            result.onSuccess {
-                showToast("Mascota guardada correctamente")
-                finish()
-            }.onFailure { e ->
-                showToast("Error al guardar mascota: ${e.message}")
+            if (imageUri != null) {
+                uploadImageToFirebase(imageUri!!, name, description, price)
+            } else if (imageUrlFromInput.isNotEmpty()) {
+                guardarMascota(name, description, price, imageUrlFromInput)
+            } else if (mascotaExistente != null) {
+                guardarMascota(name, description, price, mascotaExistente!!.imageUrl)
+            } else {
+                showToast("Selecciona una imagen o ingresa una URL")
             }
         }
     }
@@ -103,23 +122,26 @@ class MascotaAddEditActivity : AppCompatActivity() {
                 imageRef.downloadUrl
             }
             .addOnSuccessListener { downloadUri ->
-                savePetData(name, description, price, downloadUri.toString())
+                guardarMascota(name, description, price, downloadUri.toString())
             }
             .addOnFailureListener { e ->
                 showToast("Error al subir la imagen: ${e.message}")
             }
     }
 
-    private fun savePetData(name: String, description: String, price: Int, imageUrl: String) {
+    private fun guardarMascota(name: String, description: String, price: Int, imageUrl: String) {
         val mascota = Mascota(
+            id = mascotaExistente?.id ?: "",
+            ownerId = firebaseAuth.currentUser?.uid.orEmpty(),
             name = name,
             description = description,
             price = price,
-            imageUrl = imageUrl,
-            id = "",         // El id se genera en el repositorio
-            ownerId = ""     // Se asigna en el repositorio usando el usuario autenticado
+            imageUrl = imageUrl
         )
+
         mascotaAddEditViewModel.savePet(mascota)
+        showToast("Mascota ${if (mascotaExistente == null) "registrada" else "actualizada"} correctamente")
+        finish()
     }
 
     private fun showToast(message: String) {

@@ -35,7 +35,7 @@ class MascotaListViewModel : ViewModel() {
                 _mascotas.value = listaMascotas
             }
             .addOnFailureListener {
-                _mascotas.value = emptyList() // Limpia la lista si hay error
+                _mascotas.value = emptyList()
             }
     }
 
@@ -44,10 +44,10 @@ class MascotaListViewModel : ViewModel() {
             .document(mascotaId)
             .delete()
             .addOnSuccessListener {
-                obtenerMascotas() // 🔁 Refrescar después de borrar
+                obtenerMascotas()
             }
             .addOnFailureListener {
-                // Manejo de errores opcional
+
             }
     }
 }

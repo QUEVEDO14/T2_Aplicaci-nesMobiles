@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.auth.FirebaseAuth
 import com.qjulio.t2_julio.databinding.ActivityMascotaListBinding
 import com.qjulio.t2_julio.ui.auth.LoginActivity
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+
 
 class MascotaListActivity : AppCompatActivity() {
 
@@ -29,7 +32,15 @@ class MascotaListActivity : AppCompatActivity() {
                 startActivity(intent)
             },
             onEliminarClick = { mascota ->
-                viewModel.eliminarMascota(mascota.id)
+                AlertDialog.Builder(this)
+                    .setTitle("Eliminar mascota")
+                    .setMessage("¿Estás seguro de que deseas eliminar esta mascota?")
+                    .setPositiveButton("Sí") { _, _ ->
+                        viewModel.eliminarMascota(mascota.id)
+                        Toast.makeText(this, "Mascota eliminada", Toast.LENGTH_SHORT).show()
+                    }
+                    .setNegativeButton("Cancelar", null)
+                    .show()
             }
         )
 
