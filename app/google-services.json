@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "898189941569",
+    "project_id": "t2-julio",
+    "storage_bucket": "t2-julio.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:898189941569:android:90c28ade3a3b972aebdfc0",
+        "android_client_info": {
+          "package_name": "com.qjulio.t2_julio"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTf7r5VE6J1khIwuvtOLOkae38MMbiV8g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

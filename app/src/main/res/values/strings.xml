@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">T2_Julio</string>
+    <!-- Cambiar el formato a %1$d para enteros -->
+    <string name="precio_formato">S/ %1$d</string>
+    <string name="registro_de_mascota">Registro de Mascota</string>
+    <string name="seleccionar_imagen">Seleccionar Imagen</string>
+    <string name="o_ingresa_url_de_la_imagen">O ingresa URL de la imagen</string>
+    <string name="nombre">Nombre</string>
+    <string name="descripci_n">Descripción</string>
+    <string name="precio">Precio</string>
+    <string name="guardar">Guardar</string>
+    <string name="sesi_n_iniciada">Sesión iniciada</string>
+    <string name="nombre_de_la_mascota">Nombre de la mascota</string>
+    <string name="descripci_ns">Descripción</string>
+    <string name="s_0_00">S/. 0.00</string>
+    <string name="editar">Editar</string>
+    <string name="eliminar">Eliminar</string>
+</resources>
